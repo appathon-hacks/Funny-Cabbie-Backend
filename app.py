@@ -3,6 +3,8 @@
 from flask import Flask, jsonify, make_response, render_template, redirect, request
 from crossdomain import crossdomain
 
+import pyjokes
+
 app = Flask(__name__)
 
 commands = [
@@ -24,9 +26,10 @@ def command(command_name):
 	'''
 	This page is displayed when index page is requested.
 	'''
-	print command_name
-	print request.args['args']
-	return  make_response(jsonify({ 'error': '500' }))	
+	result = {}
+	if command_name == 'joke':
+		result['joke'] = get_joke()
+	return  make_response(jsonify(result),200)	
 	
 
 	
@@ -52,6 +55,13 @@ def not_found(error):
 	'''
 	print error
 	return make_response(jsonify({ 'error': '500 something wrong' }), 500)	
+	
+	
+# helpers
+
+def get_joke():
+	return pyjokes.get_joke()
+
 	
 
 
